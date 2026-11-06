@@ -1,0 +1,9 @@
+{
+  "name": "Trading Guru \u2014 Learn From Zero",
+  "short_name": "Trading Guru",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#0b1220",
+  "theme_color": "#101827",
+  "description": "Beginner-friendly stock market education in Hinglish."
+}
