@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#101827"><link rel="manifest" href="manifest.json">
+<title>Trading Guru — Learn From Zero</title>
+<style>
+:root{--bg:#0b1220;--panel:#121e30;--panel2:#18263b;--text:#edf4ff;--muted:#a8b6ca;--accent:#65d6a6;--gold:#ffd166;--line:#2b3b52}
+*{box-sizing:border-box}body{margin:0;background:linear-gradient(160deg,#0b1220,#101b2c);color:var(--text);font:16px/1.55 system-ui,-apple-system,Segoe UI,sans-serif}
+header{padding:22px 18px 14px;max-width:1050px;margin:auto}header .tag{color:var(--accent);font-weight:700;font-size:12px;letter-spacing:1.5px}h1{margin:5px 0;font-size:28px}header p{color:var(--muted);margin:4px 0}
+nav{display:flex;gap:8px;overflow:auto;padding:8px 18px 14px;max-width:1050px;margin:auto}
+nav button,.btn{border:1px solid var(--line);background:var(--panel2);color:var(--text);border-radius:12px;padding:10px 14px;font-weight:650;white-space:nowrap;cursor:pointer}
+nav button.active,.btn.primary{background:var(--accent);color:#082016;border-color:var(--accent)}
+main{max-width:1050px;margin:auto;padding:0 18px 40px}.view{display:none}.view.active{display:block}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:18px;margin:12px 0}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+.stat{font-size:25px;font-weight:800;color:var(--accent)}.muted{color:var(--muted)}.small{font-size:13px;color:var(--muted)}
+h2{font-size:22px;margin:5px 0 12px}h3{margin:4px 0 8px}.lesson{width:100%;text-align:left;white-space:normal;display:block;margin:8px 0;padding:14px}
+.lesson strong{display:block;font-size:16px}.lesson span{color:var(--muted);font-size:13px}
+.badge{display:inline-block;background:#203b39;color:var(--accent);padding:3px 8px;border-radius:20px;font-size:12px}
+ul{padding-left:22px}.callout{border-left:3px solid var(--gold);padding:10px 12px;background:#2b2a24;border-radius:8px;color:#fff0c2}
+.question{padding:14px 0;border-bottom:1px solid var(--line)}label{display:block;margin:8px 0;color:var(--muted)}input[type=radio]{margin-right:8px}
+input,select{background:#0b1524;color:var(--text);border:1px solid var(--line);padding:10px;border-radius:10px;max-width:100%}
+button:focus,a:focus,input:focus{outline:2px solid var(--gold);outline-offset:2px}
+footer{max-width:1050px;margin:auto;padding:0 18px 30px;color:var(--muted);font-size:12px}
+a{color:var(--accent)}.hidden{display:none!important}
+</style>
+</head>
+<body>
+<header>
+ <div class="tag">YOUR ZERO-TO-FOUNDATION COURSE</div>
+ <h1>📈 Trading Guru</h1>
+ <p>Learn the stock market step by step — Hinglish, beginner-friendly, and ₹0-risk learning.</p>
+</header>
+<nav>
+ <button class="active" data-tab="home">Home</button><button data-tab="lessons">Lessons</button><button data-tab="quiz">Quiz</button><button data-tab="charts">Charts</button><button data-tab="simulator">Paper Trading</button><button data-tab="glossary">Glossary</button><button data-tab="progress">Progress</button>
+</nav>
+<main>
+<section id="home" class="view active">
+ <div class="card">
+  <span class="badge">LEARNING MODE · NO REAL MONEY</span>
+  <h2>Welcome, learner!</h2><p class="muted">Daily 1-hour plan: learn a concept, see an example, revise, then test yourself. Start with Lesson 1.</p>
+  <button class="btn primary" onclick="openLesson(0)">Start / Continue learning →</button>
+ </div>
+ <div class="grid">
+  <div class="card"><div class="small">LESSONS COMPLETED</div><div class="stat" id="homeDone">0 / 9</div></div>
+  <div class="card"><div class="small">QUIZ BEST SCORE</div><div class="stat" id="homeScore">—</div></div>
+  <div class="card"><div class="small">DAILY STUDY TARGET</div><div class="stat">60 min</div></div>
+ </div>
+ <div class="card"><h3>Suggested routine</h3><ul><li>20 min — read the lesson</li><li>20 min — work through the example</li><li>10 min — revise key terms</li><li>10 min — take the quiz</li></ul></div>
+ <div class="grid"><div class="card"><h3>📊 Chart Lab</h3><p class="muted">Practice reading fictional candlestick charts.</p><button class="btn" onclick="showTab('charts')">Open Chart Lab</button></div><div class="card"><h3>🧪 Paper Trading</h3><p class="muted">Use virtual credits only. No real money or live market prices.</p><button class="btn" onclick="showTab('simulator')">Open simulator</button></div></div>
+ <div class="callout"><strong>Safety first:</strong> This app is for education only. No profit is guaranteed. Prices can fall and people can lose money. Do not deposit money, borrow to trade, or use leverage/derivatives while learning.</div>
+</section>
+<section id="lessons" class="view"><h2>Course lessons</h2><p class="muted">Complete them in order. Your progress is saved on this device.</p><div id="lessonList"></div></section>
+<section id="lessonView" class="view"><button class="btn" onclick="showTab('lessons')">← All lessons</button><div id="lessonContent"></div><button class="btn primary" id="completeBtn">Mark lesson complete ✓</button></section>
+<section id="quiz" class="view"><h2>Quick knowledge check</h2><p class="muted">Choose one answer for each question. Answers are shown after submission.</p><form id="quizForm"></form><button class="btn primary" onclick="gradeQuiz()">Submit quiz</button><div id="quizResult" class="card hidden"></div></section>
+
+<section id="charts" class="view">
+ <h2>📊 Interactive Chart Lab</h2><p class="muted">Fictional sample data only — not live prices or trading signals.</p>
+ <div class="card"><div class="grid">
+ <div><label for="chartAsset">Demo instrument</label><select id="chartAsset"><option value="abc">ABC Learning (fictional)</option><option value="green">Green Energy Demo (fictional)</option><option value="bharat">Bharat Demo Co. (fictional)</option></select></div>
+ <div><label for="chartRange">Chart view</label><select id="chartRange"><option value="all">All candles</option><option value="last10">Last 10 candles</option><option value="last5">Last 5 candles</option></select></div></div>
+ <canvas id="candleCanvas" width="900" height="380" style="width:100%;height:auto;background:#0a1422;border:1px solid var(--line);border-radius:12px;margin-top:14px"></canvas>
+ <p id="chartOhlc" class="small">Tap/click a candle to inspect Open, High, Low and Close.</p>
+ <span class="badge">Green = close above open</span> <span class="badge" style="background:#402b32;color:#ff9eaa">Red = close below open</span></div>
+ <div class="card"><h3>How to read it</h3><ul><li>Body = open-to-close range.</li><li>Wick = high and low beyond the body.</li><li>One candle cannot reliably predict the next price move.</li></ul></div>
+</section>
+<section id="simulator" class="view">
+ <h2>🧪 Paper Trading Simulator</h2><p class="muted">Fictional demo assets and virtual credits only. No real orders, real money or live market connection.</p>
+ <div class="grid"><div class="card"><div class="small">VIRTUAL CASH</div><div class="stat" id="virtualCash">₹100,000</div></div><div class="card"><div class="small">PORTFOLIO VALUE</div><div class="stat" id="portfolioValue">₹100,000</div></div><div class="card"><div class="small">PRACTICE P/L</div><div class="stat" id="totalPL">₹0</div></div></div>
+ <div class="card"><h3>Practice order</h3><div class="grid">
+ <div><label for="simAsset">Fictional asset</label><select id="simAsset"><option>ABC Learning</option><option>Green Energy Demo</option><option>Bharat Demo Co.</option></select></div>
+ <div><label for="simSide">Practice action</label><select id="simSide"><option value="buy">Buy (virtual)</option><option value="sell">Sell (virtual)</option></select></div>
+ <div><label for="simQty">Units</label><input id="simQty" type="number" min="1" step="1" value="1"></div></div>
+ <p id="simQuote" class="muted">Fictional demo price: ₹100</p><button class="btn primary" onclick="placeVirtualOrder()">Record virtual order</button> <button class="btn" onclick="resetSimulator()">Reset virtual account</button>
+ <p class="small">Fixed fictional prices for learning. Not recommendations or market quotes.</p><p id="simMessage" role="status" class="small"></p></div>
+ <div class="card"><h3>Virtual holdings</h3><div id="holdingsTable" class="muted">No virtual holdings yet.</div></div>
+ <div class="card"><h3>Practice journal</h3><div id="tradeLog" class="muted">No practice orders recorded yet.</div></div>
+</section>
+
+<section id="glossary" class="view"><h2>Beginner glossary</h2><div id="glossaryList"></div></section>
+<section id="progress" class="view"><h2>Your learning progress</h2><div class="card"><div class="stat" id="progressDone">0 / 9</div><p class="muted">Lessons completed on this device</p><div id="progressList"></div></div><button class="btn" onclick="resetProgress()">Reset progress</button></section>
+</main>
+<footer>Educational content only; not investment advice. No live market data or real-money trading is provided. App progress is stored locally in your browser.</footer>
+<script>
+const lessons=[
+{title:"What is the Stock Market?",time:"60 min",intro:"Stock market ek marketplace hai jahan investors listed companies ke shares buy aur sell kar sakte hain.",sections:[
+["1. What is a share?","Share company ki ownership ka chhota hissa hota hai. Agar tumhare paas kisi company ka share hai, tum us company ke shareholder ho."],
+["2. Why do companies issue shares?","Companies business grow karne ke liye capital raise kar sakti hain. Investors company ke future performance aur share price ke risk ko accept karte hain."],
+["3. How can a share price change?","Demand, supply, company performance, news aur market expectations ke karan price badal ya ghat sakta hai."],
+["4. Trader vs investor","Trader generally shorter-term price changes par focus karta hai. Investor usually longer-term business ownership aur growth par focus karta hai. Dono mein risk hota hai."]
+],example:"Hypothetical example: ek share ₹100 par kharida aur baad mein ₹120 par becha, toh charges se pehle ₹20 gain. Agar ₹80 par becha, toh ₹20 loss. Yeh sirf example hai, prediction nahi.",takeaways:["Share = ownership ka hissa.","Share prices upar ya neeche ja sakte hain.","Profit guaranteed nahi hota.","Risk ko samajhna zaroori hai."]},
+{title:"NSE, BSE, Nifty & Sensex",time:"60 min",intro:"India mein do major stock exchanges NSE aur BSE hain. Index market ke selected shares ki performance ko summarize karta hai.",sections:[
+["1. NSE","National Stock Exchange of India. Is par listed securities trade hoti hain."],
+["2. BSE","BSE Limited, pehle Bombay Stock Exchange ke naam se jaana jaata tha. Yeh India ka major stock exchange hai."],
+["3. Nifty 50","NSE ka ek benchmark index, jo 50 large companies ke selected shares ko track karta hai."],
+["4. Sensex","BSE ka benchmark index, jo 30 large, established companies ko track karta hai."]
+],example:"Agar Nifty 50 index ek din 1% rise karta hai, iska matlab index ki value badhi. Iska matlab yeh nahi ki har listed share 1% badha.",takeaways:["Exchange ek organized marketplace hai.","Nifty 50 NSE ka benchmark index hai.","Sensex BSE ka benchmark index hai.","Index poore market ka perfect representation nahi hota."]},
+{title:"Shares, IPO & Ownership",time:"60 min",intro:"IPO ka matlab Initial Public Offering: jab company pehli baar public investors ko shares offer karti hai.",sections:[
+["1. Equity share","Company mein ownership ka hissa."],["2. IPO","Company ka public ko shares offer karne ka process."],["3. Shareholder rights","Share class aur applicable rules ke hisaab se voting ya dividend rights ho sakte hain."],["4. Risk","Company ka business kharab ho sakta hai aur share value gir sakti hai."]
+],example:"Hypothetical: company IPO mein share price ₹100 rakhti hai. Listing ke baad market price ₹90, ₹100 ya ₹110 ho sakta hai. Listing gain guaranteed nahi.",takeaways:["IPO first public offer hota hai.","Share ownership deta hai.","Dividend guaranteed nahi.","Company research important hai."]},
+{title:"How orders & markets work",time:"60 min",intro:"Order ek instruction hota hai jo broker ke through exchange ko diya ja sakta hai.",sections:[
+["1. Market order","Available market price par execute hone ki koshish karta hai; exact price guaranteed nahi."],["2. Limit order","Tum maximum buy price ya minimum sell price set karte ho; order execute hona guaranteed nahi."],["3. Bid and ask","Bid buyer ki offered price; ask seller ki requested price."],["4. Liquidity","Kitni aasani se asset buy/sell ho sakta hai without large price impact."]
+],example:"Hypothetical: best ask ₹101 hai. Market buy order around available ask prices execute ho sakta hai. Limit buy ₹99 par lagaya toh seller na mile toh order pending reh sakta hai.",takeaways:["Order execution aur price alag concepts hain.","Limit order execute hona guaranteed nahi.","Liquidity matter karti hai."]},
+{title:"Candlesticks & charts",time:"60 min",intro:"Candlestick chart ek chosen time period ke open, high, low aur close prices dikhata hai.",sections:[
+["1. Open & close","Period shuru hone ka price open; period end ka price close."],["2. High & low","Us period ka highest aur lowest traded price."],["3. Candle body","Open aur close ke beech ka range."],["4. Wick/shadow","High aur low tak ki movement dikhati hai."]
+],example:"Agar daily candle open ₹100, high ₹110, low ₹95, close ₹108 ho, toh period ₹100 par start hua aur ₹108 par end hua. Ek candle akeli future predict nahi karti.",takeaways:["Candles past price action summarize karti hain.","Timeframe badalne se candle badalti hai.","Patterns guaranteed signals nahi."]},
+{title:"Trends, support & resistance",time:"60 min",intro:"Trend price movement ki broad direction batata hai. Support/resistance chart analysis ke concepts hain, fixed walls nahi.",sections:[
+["1. Uptrend","Price generally higher highs aur higher lows banata hai."],["2. Downtrend","Price generally lower highs aur lower lows banata hai."],["3. Support","Area jahan historically buying interest ubhar sakta hai."],["4. Resistance","Area jahan historically selling pressure aa sakta hai."]
+],example:"Agar price baar-baar ₹100 ke aas-paas ruk kar bounce kare, analyst us area ko possible support zone keh sakta hai. Price phir bhi uske neeche ja sakta hai.",takeaways:["Trend ko context ke saath dekho.","Support/resistance zones hote hain, guarantees nahi.","Past pattern future certainty nahi deta."]},
+{title:"Technical vs fundamental analysis",time:"60 min",intro:"Do common analysis approaches hain. Dono ki limitations hain.",sections:[
+["1. Technical analysis","Charts, price, volume aur patterns ka study."],["2. Fundamental analysis","Company ke business, revenue, profit, debt, management aur valuation ka study."],["3. Financial statements","Balance sheet, income statement aur cash-flow statement company ki financial position samajhne mein help karte hain."],["4. No certainty","Analysis galat ho sakta hai; unexpected events prices ko affect karte hain."]
+],example:"Technical analyst price chart aur volume dekhega. Fundamental analyst company ki sales, profit, debt aur business model study karega.",takeaways:["Technical = price/volume behaviour.","Fundamental = business/financial health.","Koi method guaranteed profit nahi deta."]},
+{title:"Risk management & psychology",time:"60 min",intro:"Risk management ka goal risk ko samajhna aur limit karna hai; loss ko impossible banana nahi.",sections:[
+["1. Risk capital","Sirf wahi paisa risk mein daalna jiska loss basic needs ko affect na kare — beginners ke liye abhi ₹0 real-money practice."],["2. Position sizing","Potential loss ko samajhkar exposure decide karna; beginners ko pehle concept seekhna chahiye."],["3. Emotional decisions","Fear, greed aur FOMO impulsive decisions kara sakte hain."],["4. Trading journal","Practice decisions, reasons, result aur mistakes record karna."]
+],example:"Paper practice mein pehle se likho: maine yeh hypothetical decision kyun liya, kya risk tha, aur baad mein kya seekha. Isse discipline develop hota hai.",takeaways:["Risk eliminate nahi hota.","Borrowed money se speculation mat karo.","FOMO aur guaranteed-return claims se bacho.","Journal se learning improve hoti hai."]},
+{title:"Paper practice & review",time:"60 min",intro:"Paper trading ya simulated practice mein real money ke bina hypothetical decisions record kiye jaate hain.",sections:[
+["1. Virtual only","Real funds deposit nahi karne; sirf fictional prices aur practice records."],["2. Write a thesis","Practice se pehle likho ki hypothetical decision ka reason kya hai."],["3. Review","Result se zyada process, assumptions aur mistakes review karo."],["4. Limits","Simulation real markets ke emotions, slippage, fees aur execution ko fully reproduce nahi karti."]
+],example:"Practice log: fictional asset ABC; imagined entry ₹100; imagined exit ₹105; result +₹5 before imaginary costs. Yeh real quote ya recommendation nahi.",takeaways:["Paper practice bhi imperfect hai.","Virtual profit real-world skill/profit prove nahi karta.","Education continue rakho; real-money rush mat karo."]}
+];
+const glossary=[["Share","Company ki ownership ka chhota hissa."],["Stock exchange","Organized marketplace jahan listed securities trade hoti hain."],["NSE","National Stock Exchange of India."],["BSE","BSE Limited, India ka major stock exchange."],["Nifty 50","NSE ka 50-stock benchmark index."],["Sensex","BSE ka 30-stock benchmark index."],["IPO","Initial Public Offering; company ka public share offer."],["Bull market","Market ka generally rising phase."],["Bear market","Market ka generally falling phase."],["Liquidity","Asset ko buy/sell karne ki aasani."],["Volatility","Price movement ki magnitude/frequency ka measure."],["Portfolio","Investments ka collection."],["Candlestick","Chart element showing open, high, low and close."],["Support","Possible buying-interest price area."],["Resistance","Possible selling-pressure price area."]];
+const quiz=[["A share represents…",["A loan","Part ownership in a company","A bank deposit"],1],["Nifty 50 is associated with…",["NSE","BSE only","RBI"],0],["A market order guarantees…",["Exact price","Profit","Neither exact price nor profit"],2],["A candle commonly shows…",["Open, high, low, close","Only company profit","Only volume"],0],["Paper trading uses…",["Real money","Hypothetical practice","Borrowed money"],1]];
+let completed=JSON.parse(localStorage.getItem("tg_done")||"[]"), best=localStorage.getItem("tg_best")||"";
+let current=0;
+function save(){localStorage.setItem("tg_done",JSON.stringify(completed));updateStats()}
+function updateStats(){document.getElementById("homeDone").textContent=completed.length+" / 9";document.getElementById("progressDone").textContent=completed.length+" / 9";document.getElementById("homeScore").textContent=best?best+"%":"—";document.getElementById("progressList").innerHTML=lessons.map((l,i)=>`<p>${completed.includes(i)?"✅":"○"} ${l.title}</p>`).join("")}
+function showTab(id){document.querySelectorAll(".view").forEach(v=>v.classList.remove("active"));document.getElementById(id).classList.add("active");document.querySelectorAll("nav button").forEach(b=>b.classList.toggle("active",b.dataset.tab===id));if(id!=="lessonView")window.scrollTo(0,0)}
+document.querySelectorAll("nav button").forEach(b=>b.onclick=()=>showTab(b.dataset.tab));
+function renderLessons(){document.getElementById("lessonList").innerHTML=lessons.map((l,i)=>`<button class="lesson" onclick="openLesson(${i})"><strong>${completed.includes(i)?"✅ ":""}Day ${i+1}: ${l.title}</strong><span>${l.time} · ${completed.includes(i)?"Completed":"Not completed"}</span></button>`).join("")}
+function openLesson(i){current=i;const l=lessons[i];document.getElementById("lessonContent").innerHTML=`<div class="card"><span class="badge">DAY ${i+1} · ${l.time}</span><h2>${l.title}</h2><p>${l.intro}</p></div>${l.sections.map(s=>`<div class="card"><h3>${s[0]}</h3><p>${s[1]}</p></div>`).join("")}<div class="card"><h3>Worked example</h3><p>${l.example}</p></div><div class="card"><h3>Quick recap</h3><ul>${l.takeaways.map(x=>`<li>${x}</li>`).join("")}</ul></div>`;document.getElementById("completeBtn").textContent=completed.includes(i)?"Completed ✓":"Mark lesson complete ✓";showTab("lessonView")}
+document.getElementById("completeBtn").onclick=()=>{if(!completed.includes(current))completed.push(current);save();renderLessons();openLesson(current)};
+function renderQuiz(){document.getElementById("quizForm").innerHTML=quiz.map((q,i)=>`<div class="question"><strong>Q${i+1}. ${q[0]}</strong>${q[1].map((a,j)=>`<label><input type="radio" name="q${i}" value="${j}">${a}</label>`).join("")}</div>`).join("")}
+function gradeQuiz(){let score=0,answers=[];quiz.forEach((q,i)=>{let v=document.querySelector(`input[name=q${i}]:checked`);if(v&&Number(v.value)===q[2])score++;answers.push(`Q${i+1}: ${q[1][q[2]]}`)});let pct=Math.round(score/quiz.length*100);if(!best||pct>Number(best)){best=String(pct);localStorage.setItem("tg_best",best)}let box=document.getElementById("quizResult");box.classList.remove("hidden");box.innerHTML=`<h3>Your score: ${score}/${quiz.length} (${pct}%)</h3><p>${pct>=80?"Great work!":"Revise the lessons and try again."}</p><hr>${answers.map(a=>`<p>✓ ${a}</p>`).join("")}`;updateStats()}
+function renderGlossary(){document.getElementById("glossaryList").innerHTML=glossary.map(g=>`<div class="card"><strong>${g[0]}</strong><div class="muted">${g[1]}</div></div>`).join("")}
+function resetProgress(){if(confirm("Reset all lesson progress and best quiz score on this device?")){completed=[];best="";localStorage.removeItem("tg_done");localStorage.removeItem("tg_best");save();renderLessons()}}
+
+// Interactive fictional OHLC chart lab
+const demoSeries={
+abc:[[100,104,98,103],[103,106,101,102],[102,105,99,100],[100,103,97,102],[102,108,101,107],[107,110,104,106],[106,109,103,104],[104,107,101,106],[106,112,105,111],[111,114,108,109],[109,113,106,112],[112,116,110,115],[115,117,111,113],[113,118,112,117],[117,121,115,119]],
+green:[[80,83,78,82],[82,85,80,84],[84,86,79,80],[80,82,76,77],[77,81,75,80],[80,84,79,83],[83,87,81,86],[86,89,84,85],[85,88,82,83],[83,86,80,85],[85,90,84,89],[89,92,86,87],[87,91,85,90],[90,94,88,93],[93,96,91,95]],
+bharat:[[150,153,147,149],[149,152,145,147],[147,150,143,148],[148,154,146,153],[153,157,150,151],[151,155,148,154],[154,159,152,158],[158,161,155,156],[156,160,153,155],[155,159,151,158],[158,163,156,162],[162,166,159,160],[160,165,158,164],[164,169,161,168],[168,172,165,170]]
+};
+let activeCandles=[];
+function drawChart(){
+ const key=document.getElementById("chartAsset")?.value||"abc";let data=demoSeries[key].slice();
+ const range=document.getElementById("chartRange")?.value||"all";if(range==="last10")data=data.slice(-10);if(range==="last5")data=data.slice(-5);activeCandles=data;
+ const c=document.getElementById("candleCanvas");if(!c)return;const x=c.getContext("2d"),W=c.width,H=c.height;
+ x.clearRect(0,0,W,H);x.fillStyle="#0a1422";x.fillRect(0,0,W,H);
+ const p={l:55,r:20,t:20,b:35},min=Math.min(...data.map(v=>v[2]))-3,max=Math.max(...data.map(v=>v[1]))+3,y=v=>p.t+(max-v)/(max-min)*(H-p.t-p.b);
+ x.strokeStyle="#26374d";x.fillStyle="#a8b6ca";x.font="13px system-ui";
+ for(let i=0;i<=4;i++){let v=min+(max-min)*i/4,yy=y(v);x.beginPath();x.moveTo(p.l,yy);x.lineTo(W-p.r,yy);x.stroke();x.fillText(v.toFixed(0),8,yy+4);}
+ const slot=(W-p.l-p.r)/data.length;
+ data.forEach((d,i)=>{let xx=p.l+slot*(i+.5),up=d[3]>=d[0],col=up?"#65d6a6":"#ff8494";x.strokeStyle=col;x.lineWidth=3;x.beginPath();x.moveTo(xx,y(d[1]));x.lineTo(xx,y(d[2]));x.stroke();x.fillStyle=col;let top=y(Math.max(d[0],d[3])),bot=y(Math.min(d[0],d[3]));x.fillRect(xx-slot*.22,top,slot*.44,Math.max(3,bot-top));});
+ x.fillStyle="#a8b6ca";x.fillText("Fictional sample candles · not market data",p.l,H-10);
+ c.onclick=e=>{const r=c.getBoundingClientRect(),cx=(e.clientX-r.left)/r.width*W,i=Math.floor((cx-p.l)/slot);if(i>=0&&i<data.length){let d=data[i];document.getElementById("chartOhlc").textContent=`Candle ${i+1} · O ₹${d[0]} · H ₹${d[1]} · L ₹${d[2]} · C ₹${d[3]}`;}};
+ document.getElementById("chartOhlc").textContent="Tap/click a candle to inspect OHLC.";
+}
+document.getElementById("chartAsset")?.addEventListener("change",drawChart);document.getElementById("chartRange")?.addEventListener("change",drawChart);
+
+// Local-only virtual simulator. No broker connection or real orders.
+const simPrices={"ABC Learning":100,"Green Energy Demo":80,"Bharat Demo Co.":150};
+let simState=JSON.parse(localStorage.getItem("tg_sim")||"null")||{cash:100000,holdings:{},avgCost:{},log:[],realized:0};
+function money(n){return "₹"+Number(n).toLocaleString("en-IN",{maximumFractionDigits:2});}
+function saveSim(){localStorage.setItem("tg_sim",JSON.stringify(simState));renderSim();}
+function renderSim(){
+ simState.avgCost=simState.avgCost||{};simState.holdings=simState.holdings||{};simState.log=simState.log||[];
+ const hv=Object.entries(simState.holdings).reduce((s,[a,q])=>s+q*simPrices[a],0),value=simState.cash+hv;
+ const unreal=Object.entries(simState.holdings).reduce((s,[a,q])=>s+q*(simPrices[a]-(simState.avgCost[a]||simPrices[a])),0);
+ document.getElementById("virtualCash").textContent=money(simState.cash);document.getElementById("portfolioValue").textContent=money(value);document.getElementById("totalPL").textContent=money(simState.realized+unreal);
+ const rows=Object.entries(simState.holdings).filter(v=>v[1]>0);
+ document.getElementById("holdingsTable").innerHTML=rows.length?rows.map(([a,q])=>`<p><strong>${a}</strong> — ${q} units · fictional value ${money(q*simPrices[a])}</p>`).join(""):"No virtual holdings yet.";
+ document.getElementById("tradeLog").innerHTML=simState.log.length?simState.log.slice().reverse().map(v=>`<p>${v}</p>`).join(""):"No practice orders recorded yet.";
+ const a=document.getElementById("simAsset")?.value||"ABC Learning";document.getElementById("simQuote").textContent="Fictional demo price: "+money(simPrices[a]);
+}
+document.getElementById("simAsset")?.addEventListener("change",renderSim);
+function placeVirtualOrder(){
+ const a=document.getElementById("simAsset").value,side=document.getElementById("simSide").value,q=Number(document.getElementById("simQty").value),p=simPrices[a],cost=q*p,msg=document.getElementById("simMessage");
+ if(!Number.isInteger(q)||q<1){msg.textContent="Enter a whole number of units (minimum 1).";return;}
+ const held=simState.holdings[a]||0;
+ if(side==="buy"){
+  if(cost>simState.cash){msg.textContent="Not enough virtual cash. Reduce the unit count.";return;}
+  simState.avgCost[a]=((simState.avgCost[a]||0)*held+cost)/(held+q);simState.holdings[a]=held+q;simState.cash-=cost;
+  simState.log.push(`VIRTUAL BUY ${q} × ${a} at ${money(p)} = ${money(cost)}`);
+ }else{
+  if(q>held){msg.textContent=`You only hold ${held} virtual unit(s) of ${a}.`;return;}
+  const gain=(p-(simState.avgCost[a]||p))*q;simState.realized=(simState.realized||0)+gain;simState.holdings[a]=held-q;simState.cash+=cost;
+  simState.log.push(`VIRTUAL SELL ${q} × ${a} at ${money(p)}; practice realized P/L ${money(gain)}`);
+ }
+ msg.textContent="Virtual practice order recorded — this is not a real trade.";saveSim();
+}
+function resetSimulator(){if(confirm("Reset the virtual practice account to ₹100,000?")){simState={cash:100000,holdings:{},avgCost:{},log:[],realized:0};document.getElementById("simMessage").textContent="Virtual account reset.";saveSim();}}
+
+renderLessons();renderQuiz();renderGlossary();updateStats();drawChart();renderSim();
+if("serviceWorker" in navigator)window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{}));
+</script>
+</body></html>
